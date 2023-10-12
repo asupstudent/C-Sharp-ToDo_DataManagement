@@ -48,7 +48,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.button1);
             this.Name = "Main";
-            this.Text = "Form1";
+            this.Text = "Управление данными";
             this.ResumeLayout(false);
 
         }
