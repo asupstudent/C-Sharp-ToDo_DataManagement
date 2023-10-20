@@ -16,7 +16,7 @@ namespace C_Sharp_ToDo_DataManagement
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());
+            Application.Run(new Login());
         }
     }
 }
