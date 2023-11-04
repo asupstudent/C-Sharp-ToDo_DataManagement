@@ -1,0 +1,250 @@
+﻿namespace C_Sharp_ToDo_DataManagement
+{
+    partial class Main
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
+            this.materialSingleLineTextField1 = new MaterialSkin.Controls.MaterialSingleLineTextField();
+            this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.materialRaisedButton4 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.monthCalendar1 = new System.Windows.Forms.MonthCalendar();
+            this.materialRaisedButton5 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.materialRaisedButton6 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.materialLabel2 = new MaterialSkin.Controls.MaterialLabel();
+            this.materialLabel4 = new MaterialSkin.Controls.MaterialLabel();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(191, 113);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(527, 290);
+            this.dataGridView1.TabIndex = 0;
+            // 
+            // materialLabel1
+            // 
+            this.materialLabel1.AutoSize = true;
+            this.materialLabel1.Depth = 0;
+            this.materialLabel1.Font = new System.Drawing.Font("Roboto", 11F);
+            this.materialLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialLabel1.Location = new System.Drawing.Point(201, 88);
+            this.materialLabel1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel1.Name = "materialLabel1";
+            this.materialLabel1.Size = new System.Drawing.Size(65, 19);
+            this.materialLabel1.TabIndex = 1;
+            this.materialLabel1.Text = "ПОИСК:";
+            // 
+            // materialSingleLineTextField1
+            // 
+            this.materialSingleLineTextField1.Depth = 0;
+            this.materialSingleLineTextField1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.materialSingleLineTextField1.Hint = "";
+            this.materialSingleLineTextField1.Location = new System.Drawing.Point(272, 84);
+            this.materialSingleLineTextField1.MaxLength = 32767;
+            this.materialSingleLineTextField1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialSingleLineTextField1.Name = "materialSingleLineTextField1";
+            this.materialSingleLineTextField1.PasswordChar = '\0';
+            this.materialSingleLineTextField1.SelectedText = "";
+            this.materialSingleLineTextField1.SelectionLength = 0;
+            this.materialSingleLineTextField1.SelectionStart = 0;
+            this.materialSingleLineTextField1.Size = new System.Drawing.Size(346, 23);
+            this.materialSingleLineTextField1.TabIndex = 2;
+            this.materialSingleLineTextField1.TabStop = false;
+            this.materialSingleLineTextField1.UseSystemPasswordChar = false;
+            // 
+            // materialRaisedButton1
+            // 
+            this.materialRaisedButton1.AutoSize = true;
+            this.materialRaisedButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialRaisedButton1.Depth = 0;
+            this.materialRaisedButton1.Icon = null;
+            this.materialRaisedButton1.Location = new System.Drawing.Point(624, 71);
+            this.materialRaisedButton1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton1.Name = "materialRaisedButton1";
+            this.materialRaisedButton1.Primary = true;
+            this.materialRaisedButton1.Size = new System.Drawing.Size(94, 36);
+            this.materialRaisedButton1.TabIndex = 3;
+            this.materialRaisedButton1.Text = "ОБНОВИТЬ";
+            this.materialRaisedButton1.UseVisualStyleBackColor = true;
+            // 
+            // materialRaisedButton2
+            // 
+            this.materialRaisedButton2.AutoSize = true;
+            this.materialRaisedButton2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialRaisedButton2.Depth = 0;
+            this.materialRaisedButton2.Icon = null;
+            this.materialRaisedButton2.Location = new System.Drawing.Point(15, 581);
+            this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton2.Name = "materialRaisedButton2";
+            this.materialRaisedButton2.Primary = true;
+            this.materialRaisedButton2.Size = new System.Drawing.Size(94, 36);
+            this.materialRaisedButton2.TabIndex = 4;
+            this.materialRaisedButton2.Text = "ДОБАВИТЬ";
+            this.materialRaisedButton2.UseVisualStyleBackColor = true;
+            // 
+            // materialRaisedButton3
+            // 
+            this.materialRaisedButton3.AutoSize = true;
+            this.materialRaisedButton3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialRaisedButton3.Depth = 0;
+            this.materialRaisedButton3.Icon = null;
+            this.materialRaisedButton3.Location = new System.Drawing.Point(633, 581);
+            this.materialRaisedButton3.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton3.Name = "materialRaisedButton3";
+            this.materialRaisedButton3.Primary = true;
+            this.materialRaisedButton3.Size = new System.Drawing.Size(85, 36);
+            this.materialRaisedButton3.TabIndex = 5;
+            this.materialRaisedButton3.Text = "ЗАКРЫТЬ";
+            this.materialRaisedButton3.UseVisualStyleBackColor = true;
+            // 
+            // materialRaisedButton4
+            // 
+            this.materialRaisedButton4.AutoSize = true;
+            this.materialRaisedButton4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialRaisedButton4.Depth = 0;
+            this.materialRaisedButton4.Icon = null;
+            this.materialRaisedButton4.Location = new System.Drawing.Point(258, 581);
+            this.materialRaisedButton4.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton4.Name = "materialRaisedButton4";
+            this.materialRaisedButton4.Primary = true;
+            this.materialRaisedButton4.Size = new System.Drawing.Size(85, 36);
+            this.materialRaisedButton4.TabIndex = 6;
+            this.materialRaisedButton4.Text = "УДАЛИТЬ";
+            this.materialRaisedButton4.UseVisualStyleBackColor = true;
+            // 
+            // monthCalendar1
+            // 
+            this.monthCalendar1.Location = new System.Drawing.Point(15, 141);
+            this.monthCalendar1.Name = "monthCalendar1";
+            this.monthCalendar1.TabIndex = 7;
+            // 
+            // materialRaisedButton5
+            // 
+            this.materialRaisedButton5.AutoSize = true;
+            this.materialRaisedButton5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialRaisedButton5.Depth = 0;
+            this.materialRaisedButton5.Icon = null;
+            this.materialRaisedButton5.Location = new System.Drawing.Point(115, 581);
+            this.materialRaisedButton5.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton5.Name = "materialRaisedButton5";
+            this.materialRaisedButton5.Primary = true;
+            this.materialRaisedButton5.Size = new System.Drawing.Size(137, 36);
+            this.materialRaisedButton5.TabIndex = 8;
+            this.materialRaisedButton5.Text = "РЕДАКТИРОВАТЬ";
+            this.materialRaisedButton5.UseVisualStyleBackColor = true;
+            // 
+            // materialRaisedButton6
+            // 
+            this.materialRaisedButton6.AutoSize = true;
+            this.materialRaisedButton6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialRaisedButton6.Depth = 0;
+            this.materialRaisedButton6.Icon = null;
+            this.materialRaisedButton6.Location = new System.Drawing.Point(349, 581);
+            this.materialRaisedButton6.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton6.Name = "materialRaisedButton6";
+            this.materialRaisedButton6.Primary = true;
+            this.materialRaisedButton6.Size = new System.Drawing.Size(140, 36);
+            this.materialRaisedButton6.TabIndex = 9;
+            this.materialRaisedButton6.Text = "ЭКСПОРТ В EXCEL";
+            this.materialRaisedButton6.UseVisualStyleBackColor = true;
+            // 
+            // materialLabel2
+            // 
+            this.materialLabel2.AutoSize = true;
+            this.materialLabel2.Depth = 0;
+            this.materialLabel2.Font = new System.Drawing.Font("Roboto", 11F);
+            this.materialLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialLabel2.Location = new System.Drawing.Point(12, 113);
+            this.materialLabel2.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel2.Name = "materialLabel2";
+            this.materialLabel2.Size = new System.Drawing.Size(117, 19);
+            this.materialLabel2.TabIndex = 10;
+            this.materialLabel2.Text = "Выберите дату:";
+            // 
+            // materialLabel4
+            // 
+            this.materialLabel4.AutoSize = true;
+            this.materialLabel4.Depth = 0;
+            this.materialLabel4.Font = new System.Drawing.Font("Roboto", 11F);
+            this.materialLabel4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialLabel4.Location = new System.Drawing.Point(12, 312);
+            this.materialLabel4.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel4.Name = "materialLabel4";
+            this.materialLabel4.Size = new System.Drawing.Size(87, 19);
+            this.materialLabel4.TabIndex = 12;
+            this.materialLabel4.Text = "Категории:";
+            // 
+            // Main
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(732, 629);
+            this.Controls.Add(this.materialLabel4);
+            this.Controls.Add(this.materialLabel2);
+            this.Controls.Add(this.materialRaisedButton6);
+            this.Controls.Add(this.materialRaisedButton5);
+            this.Controls.Add(this.monthCalendar1);
+            this.Controls.Add(this.materialRaisedButton4);
+            this.Controls.Add(this.materialRaisedButton3);
+            this.Controls.Add(this.materialRaisedButton2);
+            this.Controls.Add(this.materialRaisedButton1);
+            this.Controls.Add(this.materialSingleLineTextField1);
+            this.Controls.Add(this.materialLabel1);
+            this.Controls.Add(this.dataGridView1);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "Main";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Управление задачами";
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private MaterialSkin.Controls.MaterialLabel materialLabel1;
+        private MaterialSkin.Controls.MaterialSingleLineTextField materialSingleLineTextField1;
+        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton1;
+        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton2;
+        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton3;
+        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton4;
+        private System.Windows.Forms.MonthCalendar monthCalendar1;
+        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton5;
+        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton6;
+        private MaterialSkin.Controls.MaterialLabel materialLabel2;
+        private MaterialSkin.Controls.MaterialLabel materialLabel4;
+    }
+}

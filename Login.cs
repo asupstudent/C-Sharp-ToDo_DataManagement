@@ -1,61 +1,62 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MaterialSkin.Animations;
 using MaterialSkin.Controls;
 using MaterialSkin;
+using FirebirdSql.Data.FirebirdClient;
+using System.Configuration;
 
 namespace C_Sharp_ToDo_DataManagement
 {
     public partial class Login : MaterialForm
     {
         MaterialSkinManager materialSkinManager;
+        FbConnectionStringBuilder fb_cons;
+        FbConnection fbCon;
         public Login()
         {
             InitializeComponent();
             materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
-            // Configure color schema
             materialSkinManager.ColorScheme = new ColorScheme(Primary.Blue400, Primary.Blue500, Primary.Blue500, Accent.LightBlue200, TextShade.WHITE);
-        }
-
-        private void materialRaisedButton7_Click(object sender, EventArgs e)
-        {
-            this.TopMost = true;
-        }
-
-        private void materialRaisedButton8_Click(object sender, EventArgs e)
-        {
-            this.TopMost = false;
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            if(checkBox1.Checked)
-            {
-                this.TopMost= true;
-            }
-            else
-            {
-                this.TopMost= false;
-            }
-        }
-
-        private void materialRaisedButton1_Click(object sender, EventArgs e)
-        {
-            this.materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
         }
 
         private void materialRaisedButton2_Click(object sender, EventArgs e)
         {
-            this.materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+            Application.Exit();
+        }
+
+        private void materialRaisedButton1_Click(object sender, EventArgs e)
+        {
+            if (this.materialSingleLineTextField1.Text.Length != 0 && this.materialSingleLineTextField2.Text.Length != 0)
+            {
+                fb_cons = new FbConnectionStringBuilder();
+                fb_cons.Charset = "UTF8";
+                fb_cons.UserID = this.materialSingleLineTextField1.Text;
+                fb_cons.Password = this.materialSingleLineTextField2.Text;
+                fb_cons.Dialect = 3;
+                fb_cons.Database = AppDomain.CurrentDomain.BaseDirectory + @"\db\TODO.FDB";
+                fb_cons.ServerType = 0;
+                fb_cons.DataSource = "localhost";
+                fb_cons.Port = 3050;
+                try
+                {
+                    fbCon = new FbConnection(fb_cons.ToString());
+                    fbCon.Open();
+                    fbCon.Close();
+                    Program.AddUpdateAppSettings("ConnectionString", fb_cons.ToString());
+                    Program.AddUpdateAppSettings("Login", fb_cons.UserID.ToString());
+                    MessageBox.Show(ConfigurationManager.AppSettings["Login"]);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                finally
+                {
+                    fbCon.Close();
+                }
+            }
         }
     }
 }
