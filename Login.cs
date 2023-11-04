@@ -48,9 +48,9 @@ namespace C_Sharp_ToDo_DataManagement
                     Program.AddUpdateAppSettings("Login", fb_cons.UserID.ToString());
                     MessageBox.Show(ConfigurationManager.AppSettings["Login"]);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show("Введен неверный логин или пароль!");
                 }
                 finally
                 {
