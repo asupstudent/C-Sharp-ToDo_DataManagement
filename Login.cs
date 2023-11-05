@@ -46,7 +46,9 @@ namespace C_Sharp_ToDo_DataManagement
                     fbCon.Close();
                     Program.AddUpdateAppSettings("ConnectionString", fb_cons.ToString());
                     Program.AddUpdateAppSettings("Login", fb_cons.UserID.ToString());
-                    MessageBox.Show(ConfigurationManager.AppSettings["Login"]);
+                    Main toDoList = new Main();
+                    toDoList.Show();
+                    this.Hide();
                 }
                 catch (Exception)
                 {
