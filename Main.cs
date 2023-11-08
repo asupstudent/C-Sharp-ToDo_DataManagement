@@ -42,15 +42,20 @@ namespace C_Sharp_ToDo_DataManagement
             {
                 fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
                 fbCon.Open();
-                command = "SELECT ID AS \"Номер\", NAME_TASK AS \"Название задачи\", DATE_TASK AS \"Дата\", ID_STATUS, ID_IMPORTANCE FROM TODO;";
+                command = "SELECT TODO.ID AS \"Номер\", TODO.NAME_TASK AS \"Название задачи\", TODO.DATE_TASK AS \"Дата\", IMPORTANCE.NAME_IMPORTANCE AS \"Важность\", STATUS.NAME_STATUS AS \"Статус\" " +
+                    "FROM TODO, IMPORTANCE, STATUS " +
+                    "WHERE TODO.ID_STATUS = STATUS.ID AND TODO.ID_IMPORTANCE = IMPORTANCE.ID;";
                 toDoCommand = new FbCommand(command, fbCon);
                 toDoCommand.CommandType = CommandType.Text;
                 dr = toDoCommand.ExecuteReader();
                 dt = new DataTable();
                 dt.Load(dr);
                 dataGridView1.DataSource = dt;
-                dataGridView1.Columns[3].Visible = false;
-                dataGridView1.Columns[4].Visible = false;
+                dataGridView1.Columns[0].Width = 60;
+                dataGridView1.Columns[1].Width = 418;
+                dataGridView1.Columns[2].Width = 100;
+                dataGridView1.Columns[3].Width = 100;
+                dataGridView1.Columns[4].Width = 100;
             }
             catch (Exception x)
             {
@@ -73,30 +78,22 @@ namespace C_Sharp_ToDo_DataManagement
             {
                 try
                 {
-                    //MessageBox.Show(row.Cells["ID_IMPORTANCE"].Value.ToString());
-                    //for(int i = 0; i < dataGridView1.Rows.Count; i++)
-                    //{
-                    //MessageBox.Show(dataGridView1[4, i].Value.ToString());
-                    switch (row.Cells["ID_IMPORTANCE"].Value.ToString())
+                    switch (row.Cells["Важность"].Value.ToString())
                     {
-                        //case "Обязательно":
-                        case "1":
+                        case "Обязательно":
                             row.DefaultCellStyle.BackColor = Color.Red;
                             break;
-                        //case "Желательно":
-                        case "2":
+                        case "Желательно":
                             row.DefaultCellStyle.BackColor = Color.Orange;
                             break;
-                        //case "Можно отложить":
-                        case "3":
+                        case "Можно отложить":
                             row.DefaultCellStyle.BackColor = Color.Yellow;
                             break;
                     }
-                    //}
                 }
                 catch
                 {
-                    // здесь можно отреагировать на неправильные данные, а можно ничего не делать
+
                 }
             }
         }
