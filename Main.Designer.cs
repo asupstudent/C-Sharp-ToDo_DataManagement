@@ -100,6 +100,7 @@
             this.materialRaisedButton1.TabIndex = 3;
             this.materialRaisedButton1.Text = "ОБНОВИТЬ";
             this.materialRaisedButton1.UseVisualStyleBackColor = true;
+            this.materialRaisedButton1.Click += new System.EventHandler(this.materialRaisedButton1_Click);
             // 
             // materialRaisedButton2
             // 
@@ -152,6 +153,7 @@
             this.monthCalendar1.Location = new System.Drawing.Point(15, 141);
             this.monthCalendar1.Name = "monthCalendar1";
             this.monthCalendar1.TabIndex = 7;
+            this.monthCalendar1.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendar1_DateChanged);
             // 
             // materialRaisedButton5
             // 
