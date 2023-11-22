@@ -38,7 +38,7 @@ namespace C_Sharp_ToDo_DataManagement
 
         private void refreshTable(string date_list)
         {
-            setExpired();
+            updateExpired(getExpiredIds());
             try
             {
                 fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
@@ -48,7 +48,7 @@ namespace C_Sharp_ToDo_DataManagement
                     "WHERE TODO.ID_STATUS = STATUS.ID AND " +
                     "TODO.ID_IMPORTANCE = IMPORTANCE.ID AND " +
                     "TODO.ID_USER = USER_TODO.ID AND " +
-                    "USER_TODO.LOGIN = '" + ConfigurationManager.AppSettings["Login"].ToLower() + "' AND " +
+                    "USER_TODO.LOGIN = '" + ConfigurationManager.AppSettings["Login"].ToUpper() + "' AND " +
                     "CAST(TODO.DATE_TASK_START AS DATE) = @date_list;";
                 toDoCommand = new FbCommand(command, fbCon);
                 toDoCommand.Parameters.AddWithValue("@date_list", date_list);
@@ -74,18 +74,82 @@ namespace C_Sharp_ToDo_DataManagement
             }
         }
 
-        private void setExpired()
+        private int[] getExpiredIds()
         {
+            int[] expiredId = Array.Empty<int>();
             try
             {
                 fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
                 fbCon.Open();
-                command = "SELECT TODO.ID FROM TODO, STATUS WHERE TODO.ID_STATUS = STATUS.ID AND STATUS.NAME_STATUS = 'В работе';";
+                command = "SELECT TODO.ID FROM TODO, STATUS WHERE TODO.ID_STATUS = STATUS.ID AND STATUS.NAME_STATUS = 'В работе' AND DATE_TASK_END between '01.01.1970 00:00:00' AND  '" + DateTime.Now + "';";
                 toDoCommand = new FbCommand(command, fbCon);
                 toDoCommand.CommandType = CommandType.Text;
                 dr = toDoCommand.ExecuteReader();
                 dt = new DataTable();
                 dt.Load(dr);
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    Array.Resize(ref expiredId, expiredId.Length + 1);
+                    expiredId[expiredId.Length - 1] = (int)dt.Rows[i][0];
+                }
+                return expiredId;
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.Message);
+                return null;
+            }
+            finally
+            {
+                fbCon.Close();
+            }
+        }
+
+        private int getExpiredId()
+        {
+            try
+            {
+                fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                fbCon.Open();
+                command = "SELECT STATUS.ID FROM STATUS WHERE STATUS.NAME_STATUS = 'Просрочено';";
+                toDoCommand = new FbCommand(command, fbCon);
+                toDoCommand.CommandType = CommandType.Text;
+                dr = toDoCommand.ExecuteReader();
+                dt = new DataTable();
+                dt.Load(dr);
+                return (int)dt.Rows[0][0];
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.Message);
+                return 0;
+            }
+            finally
+            {
+                fbCon.Close();
+            }
+
+        }
+
+        private void updateExpired(int[] ids)
+        {
+            int[] receivedId = ids;
+            int expiredId = getExpiredId();
+            try
+            {
+                fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                fbCon.Open();
+                toDoTransaction = fbCon.BeginTransaction();
+                for (int i = 0; i < receivedId.Length; i++)
+                {
+                    command = "UPDATE TODO SET TODO.ID_STATUS = @expiredId WHERE TODO.ID = @receivedId;";
+                    toDoCommand = new FbCommand(command, fbCon, toDoTransaction);
+                    toDoCommand.Parameters.AddWithValue("@expiredId", expiredId);
+                    toDoCommand.Parameters.AddWithValue("@receivedId", receivedId[i]);
+                    toDoCommand.CommandType = CommandType.Text;
+                    toDoCommand.ExecuteNonQuery();
+                }
+                toDoTransaction.Commit();
             }
             catch (Exception x)
             {
@@ -96,6 +160,8 @@ namespace C_Sharp_ToDo_DataManagement
                 fbCon.Close();
             }
         }
+
+
 
         private void materialRaisedButton3_Click(object sender, EventArgs e)
         {
