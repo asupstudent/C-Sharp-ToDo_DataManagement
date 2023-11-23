@@ -72,6 +72,7 @@ namespace C_Sharp_ToDo_DataManagement
             {
                 fbCon.Close();
             }
+            setStatusDelete();
         }
 
         private int[] getExpiredIds()
@@ -161,7 +162,17 @@ namespace C_Sharp_ToDo_DataManagement
             }
         }
 
-
+        private void setStatusDelete()
+        {
+            if (dataGridView1.Rows.Count != 0)
+            {
+                this.materialRaisedButton4.Enabled = true;
+            }
+            else
+            {
+                this.materialRaisedButton4.Enabled = false;
+            }
+        }
 
         private void materialRaisedButton3_Click(object sender, EventArgs e)
         {
@@ -217,6 +228,35 @@ namespace C_Sharp_ToDo_DataManagement
         private void materialRaisedButton1_Click(object sender, EventArgs e)
         {
             refreshTable(DateTime.Today.ToString("dd.MM.yyyy"));
+        }
+
+        private void materialRaisedButton4_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Вы действиетльно хотите удалить запись?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                    fbCon.Open();
+                    toDoTransaction = fbCon.BeginTransaction();
+                    command = "DELETE FROM TODO WHERE TODO.ID = @current_record;";
+                    toDoCommand = new FbCommand(command, fbCon, toDoTransaction);
+                    toDoCommand.Parameters.AddWithValue("@current_record", Convert.ToInt32(dataGridView1[0, dataGridView1.CurrentRow.Index].Value));
+                    toDoCommand.CommandType = CommandType.Text;
+                    toDoCommand.ExecuteNonQuery();
+                    toDoTransaction.Commit();
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Произошла ошибка при удалении");
+                }
+                finally
+                {
+                    fbCon.Close();
+                }
+            }
+            this.refreshTable(DateTime.Today.ToString("dd.MM.yyyy"));
         }
     }
 }

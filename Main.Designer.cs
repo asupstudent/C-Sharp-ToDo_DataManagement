@@ -138,6 +138,8 @@
             this.materialRaisedButton4.AutoSize = true;
             this.materialRaisedButton4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.materialRaisedButton4.Depth = 0;
+            this.materialRaisedButton4.Enabled = false;
+            this.materialRaisedButton4.ForeColor = System.Drawing.SystemColors.ControlText;
             this.materialRaisedButton4.Icon = null;
             this.materialRaisedButton4.Location = new System.Drawing.Point(259, 552);
             this.materialRaisedButton4.MouseState = MaterialSkin.MouseState.HOVER;
@@ -147,6 +149,7 @@
             this.materialRaisedButton4.TabIndex = 6;
             this.materialRaisedButton4.Text = "УДАЛИТЬ";
             this.materialRaisedButton4.UseVisualStyleBackColor = true;
+            this.materialRaisedButton4.Click += new System.EventHandler(this.materialRaisedButton4_Click);
             // 
             // monthCalendar1
             // 
