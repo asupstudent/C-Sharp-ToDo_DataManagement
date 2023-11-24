@@ -1,18 +1,11 @@
 ﻿using MaterialSkin;
 using MaterialSkin.Controls;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
 using FirebirdSql.Data.FirebirdClient;
-using FirebirdSql.Data.Services;
-using System.Runtime.ConstrainedExecution;
 
 namespace C_Sharp_ToDo_DataManagement
 {
@@ -33,7 +26,12 @@ namespace C_Sharp_ToDo_DataManagement
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.Blue400, Primary.Blue500, Primary.Blue500, Accent.LightBlue200, TextShade.WHITE);
             this.Text = "Управление задачами пользователя " + ConfigurationManager.AppSettings["Login"];
-            refreshTable(DateTime.Today.ToString("dd.MM.yyyy"));
+            DataTable categories = getCategories();
+            comboBox1.DataSource = categories;
+            comboBox1.DisplayMember = "NAME";
+            comboBox1.ValueMember = "ID";
+            comboBox1.SelectedIndex = 0;
+            refreshTable(monthCalendar1.SelectionRange.Start.ToShortDateString());
         }
 
         private void refreshTable(string date_list)
@@ -43,26 +41,42 @@ namespace C_Sharp_ToDo_DataManagement
             {
                 fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
                 fbCon.Open();
-                command = "SELECT TODO.ID AS \"Номер\", TODO.NAME_TASK AS \"Название задачи\", CAST(TODO.DATE_TASK_START AS TIME) AS \"Начало\", CAST(TODO.DATE_TASK_END AS TIME) AS \"Конец\", IMPORTANCE.NAME_IMPORTANCE AS \"Важность\", STATUS.NAME_STATUS AS \"Статус\" " +
-                    "FROM TODO, IMPORTANCE, STATUS, USER_TODO " +
-                    "WHERE TODO.ID_STATUS = STATUS.ID AND " +
-                    "TODO.ID_IMPORTANCE = IMPORTANCE.ID AND " +
-                    "TODO.ID_USER = USER_TODO.ID AND " +
-                    "USER_TODO.LOGIN = '" + ConfigurationManager.AppSettings["Login"].ToUpper() + "' AND " +
-                    "CAST(TODO.DATE_TASK_START AS DATE) = @date_list;";
-                toDoCommand = new FbCommand(command, fbCon);
-                toDoCommand.Parameters.AddWithValue("@date_list", date_list);
+                if (comboBox1.SelectedIndex != 0)
+                {
+                    command = "SELECT TODO.ID AS \"Номер\", " +
+                                     "TODO.NAME_TASK AS \"Название задачи\", " +
+                                     "CAST(TODO.DATE_TASK_START AS TIME) AS \"Начало\", " +
+                                     "CAST(TODO.DATE_TASK_END AS TIME) AS \"Конец\", " +
+                                     "IMPORTANCE.NAME_IMPORTANCE AS \"Важность\", " +
+                                     "STATUS.NAME_STATUS AS \"Статус\" " +
+                              "FROM TODO, IMPORTANCE, STATUS, CATEGORY, USER_TODO " +
+                              "WHERE TODO.ID_STATUS = STATUS.ID AND " +
+                                    "TODO.ID_IMPORTANCE = IMPORTANCE.ID AND " +
+                                    "TODO.ID_CATEGORY = CATEGORY.ID AND TODO.ID_CATEGORY = @id_category AND " +
+                                    "TODO.ID_USER = USER_TODO.ID AND USER_TODO.LOGIN = '" + ConfigurationManager.AppSettings["Login"].ToUpper() + "' AND " +
+                                    "CAST(TODO.DATE_TASK_START AS DATE) = @date_list;";
+                    toDoCommand = new FbCommand(command, fbCon);
+                    toDoCommand.Parameters.AddWithValue("@id_category", comboBox1.SelectedValue.ToString());
+                    toDoCommand.Parameters.AddWithValue("@date_list", monthCalendar1.SelectionRange.Start.ToShortDateString());
+                }
+                else
+                {
+                    fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                    fbCon.Open();
+                    command = "SELECT TODO.ID AS \"Номер\", TODO.NAME_TASK AS \"Название задачи\", CAST(TODO.DATE_TASK_START AS TIME) AS \"Начало\", CAST(TODO.DATE_TASK_END AS TIME) AS \"Конец\", IMPORTANCE.NAME_IMPORTANCE AS \"Важность\", STATUS.NAME_STATUS AS \"Статус\" " +
+                        "FROM TODO, IMPORTANCE, STATUS, USER_TODO " +
+                        "WHERE TODO.ID_STATUS = STATUS.ID AND " +
+                        "TODO.ID_IMPORTANCE = IMPORTANCE.ID AND " +
+                        "TODO.ID_USER = USER_TODO.ID AND " +
+                        "USER_TODO.LOGIN = '" + ConfigurationManager.AppSettings["Login"].ToUpper() + "' AND " +
+                        "CAST(TODO.DATE_TASK_START AS DATE) = @date_list;";
+                    toDoCommand = new FbCommand(command, fbCon);
+                    toDoCommand.Parameters.AddWithValue("@date_list", date_list);
+                }
                 toDoCommand.CommandType = CommandType.Text;
                 dr = toDoCommand.ExecuteReader();
                 dt = new DataTable();
                 dt.Load(dr);
-                dataGridView1.DataSource = dt;
-                dataGridView1.Columns[0].Width = 60;
-                dataGridView1.Columns[1].Width = 318;
-                dataGridView1.Columns[2].Width = 100;
-                dataGridView1.Columns[3].Width = 100;
-                dataGridView1.Columns[4].Width = 100;
-                dataGridView1.Columns[5].Width = 100;
             }
             catch (Exception x)
             {
@@ -72,7 +86,14 @@ namespace C_Sharp_ToDo_DataManagement
             {
                 fbCon.Close();
             }
-            setStatusDelete();
+            dataGridView1.DataSource = dt;
+            dataGridView1.Columns[0].Width = 60;
+            dataGridView1.Columns[1].Width = 318;
+            dataGridView1.Columns[2].Width = 100;
+            dataGridView1.Columns[3].Width = 100;
+            dataGridView1.Columns[4].Width = 100;
+            dataGridView1.Columns[5].Width = 100;
+            setStatusButton();
         }
 
         private int[] getExpiredIds()
@@ -162,16 +183,47 @@ namespace C_Sharp_ToDo_DataManagement
             }
         }
 
-        private void setStatusDelete()
+        private void setStatusButton()
         {
             if (dataGridView1.Rows.Count != 0)
             {
-                this.materialRaisedButton4.Enabled = true;
+                materialRaisedButton4.Enabled = true;
+                materialRaisedButton5.Enabled = true;
+                materialRaisedButton8.Enabled = true;
             }
             else
             {
-                this.materialRaisedButton4.Enabled = false;
+                materialRaisedButton4.Enabled = false;
+                materialRaisedButton5.Enabled = false;
+                materialRaisedButton8.Enabled = false;
             }
+        }
+
+        private DataTable getCategories()
+        {
+            dt = new DataTable();
+
+            try
+            {
+                fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                fbCon.Open();
+                command = "SELECT * FROM CATEGORY ORDER BY ID;";
+                toDoCommand = new FbCommand(command, fbCon);
+                toDoCommand.CommandType = CommandType.Text;
+                dr = toDoCommand.ExecuteReader();
+                dt.Load(dr);
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.Message);
+                return null;
+            }
+            finally
+            {
+                fbCon.Close();
+            }
+
+            return dt;
         }
 
         private void materialRaisedButton3_Click(object sender, EventArgs e)
@@ -222,12 +274,14 @@ namespace C_Sharp_ToDo_DataManagement
 
         private void monthCalendar1_DateChanged(object sender, DateRangeEventArgs e)
         {
-            this.refreshTable(monthCalendar1.SelectionRange.Start.ToShortDateString());
+            refreshTable(monthCalendar1.SelectionRange.Start.ToShortDateString());
         }
 
         private void materialRaisedButton1_Click(object sender, EventArgs e)
         {
-            refreshTable(DateTime.Today.ToString("dd.MM.yyyy"));
+            comboBox1.SelectedIndex = 0;
+            monthCalendar1.SetDate(DateTime.Now);
+            refreshTable(monthCalendar1.SelectionRange.Start.ToShortDateString());
         }
 
         private void materialRaisedButton4_Click(object sender, EventArgs e)
@@ -256,7 +310,12 @@ namespace C_Sharp_ToDo_DataManagement
                     fbCon.Close();
                 }
             }
-            this.refreshTable(DateTime.Today.ToString("dd.MM.yyyy"));
+            refreshTable(monthCalendar1.SelectionRange.Start.ToShortDateString());
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            refreshTable(monthCalendar1.SelectionRange.Start.ToShortDateString());
         }
     }
 }
