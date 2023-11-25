@@ -120,6 +120,7 @@
             this.materialRaisedButton2.TabIndex = 4;
             this.materialRaisedButton2.Text = "ДОБАВИТЬ";
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
+            this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
             // 
             // materialRaisedButton3
             // 
@@ -177,6 +178,7 @@
             this.materialRaisedButton5.TabIndex = 8;
             this.materialRaisedButton5.Text = "РЕДАКТИРОВАТЬ";
             this.materialRaisedButton5.UseVisualStyleBackColor = true;
+            this.materialRaisedButton5.Click += new System.EventHandler(this.materialRaisedButton5_Click);
             // 
             // materialRaisedButton6
             // 

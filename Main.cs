@@ -319,5 +319,27 @@ namespace C_Sharp_ToDo_DataManagement
         {
             refreshTable(monthCalendar1.SelectionRange.Start.ToShortDateString());
         }
+
+        private void materialRaisedButton2_Click(object sender, EventArgs e)
+        {
+            using (AddEditTask addTask = new AddEditTask())
+            {
+                addTask.Text = "Добавление задачи";
+                addTask.FormClosing += delegate (object fSender, FormClosingEventArgs fe)
+                {
+                    if(addTask.DialogResult == DialogResult.OK)
+                    {
+                        
+                    }
+                };
+                addTask.ShowDialog();
+            }
+            refreshTable(monthCalendar1.SelectionRange.Start.ToShortDateString());
+        }
+
+        private void materialRaisedButton5_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
