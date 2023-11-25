@@ -25,7 +25,7 @@ namespace C_Sharp_ToDo_DataManagement
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.Blue400, Primary.Blue500, Primary.Blue500, Accent.LightBlue200, TextShade.WHITE);
-            this.Text = "Управление задачами пользователя " + ConfigurationManager.AppSettings["Login"];
+            this.Text = "Управление задачами пользователя: " + ConfigurationManager.AppSettings["Login"] + "            База данных: " + ConfigurationManager.AppSettings["Database"];
             DataTable categories = getCategories();
             comboBox1.DataSource = categories;
             comboBox1.DisplayMember = "NAME";
@@ -63,13 +63,18 @@ namespace C_Sharp_ToDo_DataManagement
                 {
                     fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
                     fbCon.Open();
-                    command = "SELECT TODO.ID AS \"Номер\", TODO.NAME_TASK AS \"Название задачи\", CAST(TODO.DATE_TASK_START AS TIME) AS \"Начало\", CAST(TODO.DATE_TASK_END AS TIME) AS \"Конец\", IMPORTANCE.NAME_IMPORTANCE AS \"Важность\", STATUS.NAME_STATUS AS \"Статус\" " +
-                        "FROM TODO, IMPORTANCE, STATUS, USER_TODO " +
-                        "WHERE TODO.ID_STATUS = STATUS.ID AND " +
-                        "TODO.ID_IMPORTANCE = IMPORTANCE.ID AND " +
-                        "TODO.ID_USER = USER_TODO.ID AND " +
-                        "USER_TODO.LOGIN = '" + ConfigurationManager.AppSettings["Login"].ToUpper() + "' AND " +
-                        "CAST(TODO.DATE_TASK_START AS DATE) = @date_list;";
+                    command = "SELECT TODO.ID AS \"Номер\", " +
+                                     "TODO.NAME_TASK AS \"Название задачи\", " +
+                                     "CAST(TODO.DATE_TASK_START AS TIME) AS \"Начало\", " +
+                                     "CAST(TODO.DATE_TASK_END AS TIME) AS \"Конец\", " +
+                                     "IMPORTANCE.NAME_IMPORTANCE AS \"Важность\", " +
+                                     "STATUS.NAME_STATUS AS \"Статус\" " +
+                              "FROM TODO, IMPORTANCE, STATUS, USER_TODO " +
+                              "WHERE TODO.ID_STATUS = STATUS.ID AND " +
+                                    "TODO.ID_IMPORTANCE = IMPORTANCE.ID AND " +
+                                    "TODO.ID_USER = USER_TODO.ID AND " +
+                                    "USER_TODO.LOGIN = '" + ConfigurationManager.AppSettings["Login"].ToUpper() + "' AND " +
+                                    "CAST(TODO.DATE_TASK_START AS DATE) = @date_list;";
                     toDoCommand = new FbCommand(command, fbCon);
                     toDoCommand.Parameters.AddWithValue("@date_list", date_list);
                 }
@@ -245,9 +250,6 @@ namespace C_Sharp_ToDo_DataManagement
                 {
                     case "Обязательно":
                         e.CellStyle.BackColor = Color.Red;
-                        break;
-                    case "Желательно":
-                        e.CellStyle.BackColor = Color.Orange;
                         break;
                     case "Можно отложить":
                         e.CellStyle.BackColor = Color.Yellow;

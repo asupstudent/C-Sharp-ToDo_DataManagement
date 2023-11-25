@@ -34,6 +34,9 @@
             this.materialSingleLineTextField2 = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.materialLabel3 = new MaterialSkin.Controls.MaterialLabel();
+            this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.SuspendLayout();
             // 
             // materialLabel1
@@ -77,6 +80,7 @@
             this.materialSingleLineTextField1.Size = new System.Drawing.Size(194, 23);
             this.materialSingleLineTextField1.TabIndex = 2;
             this.materialSingleLineTextField1.TabStop = false;
+            this.materialSingleLineTextField1.Text = "LENA";
             this.materialSingleLineTextField1.UseSystemPasswordChar = false;
             // 
             // materialSingleLineTextField2
@@ -94,6 +98,7 @@
             this.materialSingleLineTextField2.Size = new System.Drawing.Size(194, 23);
             this.materialSingleLineTextField2.TabIndex = 3;
             this.materialSingleLineTextField2.TabStop = false;
+            this.materialSingleLineTextField2.Text = "123";
             this.materialSingleLineTextField2.UseSystemPasswordChar = false;
             // 
             // materialRaisedButton1
@@ -102,7 +107,7 @@
             this.materialRaisedButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.materialRaisedButton1.Depth = 0;
             this.materialRaisedButton1.Icon = null;
-            this.materialRaisedButton1.Location = new System.Drawing.Point(17, 158);
+            this.materialRaisedButton1.Location = new System.Drawing.Point(17, 177);
             this.materialRaisedButton1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton1.Name = "materialRaisedButton1";
             this.materialRaisedButton1.Primary = true;
@@ -118,7 +123,7 @@
             this.materialRaisedButton2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.materialRaisedButton2.Depth = 0;
             this.materialRaisedButton2.Icon = null;
-            this.materialRaisedButton2.Location = new System.Drawing.Point(285, 158);
+            this.materialRaisedButton2.Location = new System.Drawing.Point(285, 177);
             this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton2.Name = "materialRaisedButton2";
             this.materialRaisedButton2.Primary = true;
@@ -128,11 +133,46 @@
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
             this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "Файлы FDB|*.fdb";
+            // 
+            // materialLabel3
+            // 
+            this.materialLabel3.Depth = 0;
+            this.materialLabel3.Font = new System.Drawing.Font("Roboto", 11F);
+            this.materialLabel3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialLabel3.Location = new System.Drawing.Point(17, 143);
+            this.materialLabel3.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel3.Name = "materialLabel3";
+            this.materialLabel3.Size = new System.Drawing.Size(299, 22);
+            this.materialLabel3.TabIndex = 6;
+            this.materialLabel3.Text = "\\TODO.FDB";
+            // 
+            // materialRaisedButton3
+            // 
+            this.materialRaisedButton3.AutoSize = true;
+            this.materialRaisedButton3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialRaisedButton3.Depth = 0;
+            this.materialRaisedButton3.Icon = null;
+            this.materialRaisedButton3.Location = new System.Drawing.Point(322, 135);
+            this.materialRaisedButton3.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton3.Name = "materialRaisedButton3";
+            this.materialRaisedButton3.Primary = true;
+            this.materialRaisedButton3.Size = new System.Drawing.Size(40, 36);
+            this.materialRaisedButton3.TabIndex = 7;
+            this.materialRaisedButton3.Text = "БД";
+            this.materialRaisedButton3.UseVisualStyleBackColor = true;
+            this.materialRaisedButton3.Click += new System.EventHandler(this.materialRaisedButton3_Click);
+            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(373, 205);
+            this.ClientSize = new System.Drawing.Size(373, 229);
+            this.Controls.Add(this.materialRaisedButton3);
+            this.Controls.Add(this.materialLabel3);
             this.Controls.Add(this.materialRaisedButton2);
             this.Controls.Add(this.materialRaisedButton1);
             this.Controls.Add(this.materialSingleLineTextField2);
@@ -157,5 +197,8 @@
         private MaterialSkin.Controls.MaterialSingleLineTextField materialSingleLineTextField2;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton1;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton2;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private MaterialSkin.Controls.MaterialLabel materialLabel3;
+        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton3;
     }
 }

@@ -229,9 +229,9 @@
             this.materialRaisedButton7.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton7.Name = "materialRaisedButton7";
             this.materialRaisedButton7.Primary = true;
-            this.materialRaisedButton7.Size = new System.Drawing.Size(269, 36);
+            this.materialRaisedButton7.Size = new System.Drawing.Size(263, 36);
             this.materialRaisedButton7.TabIndex = 13;
-            this.materialRaisedButton7.Text = "ОТЧЕТ ПО ЖЕЛАТЕЛЬНЫМ ЗАДАЧАМ";
+            this.materialRaisedButton7.Text = "ОТЧЕТ ПО ОТЛОЖЕННЫМ ЗАДАЧАМ";
             this.materialRaisedButton7.UseVisualStyleBackColor = true;
             // 
             // materialRaisedButton8
@@ -248,7 +248,7 @@
             this.materialRaisedButton8.Primary = true;
             this.materialRaisedButton8.Size = new System.Drawing.Size(996, 36);
             this.materialRaisedButton8.TabIndex = 14;
-            this.materialRaisedButton8.Text = "ЗАВЕРШИТЬ";
+            this.materialRaisedButton8.Text = "ЗАВЕРШИТЬ ЗАДАЧУ";
             this.materialRaisedButton8.UseVisualStyleBackColor = true;
             // 
             // comboBox1
