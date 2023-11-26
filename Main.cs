@@ -325,11 +325,13 @@ namespace C_Sharp_ToDo_DataManagement
             using (AddEditTask addTask = new AddEditTask())
             {
                 addTask.Text = "Добавление задачи";
+                //addTask.setStartTime(new DateTime(2023, 12, 27, 11, 45, 45));
+                //addTask.setEndTime(new DateTime(2023, 12, 27, 12, 55, 55));
                 addTask.FormClosing += delegate (object fSender, FormClosingEventArgs fe)
                 {
                     if(addTask.DialogResult == DialogResult.OK)
                     {
-                        
+
                     }
                 };
                 addTask.ShowDialog();
