@@ -320,6 +320,34 @@ namespace C_Sharp_ToDo_DataManagement
             refreshTable(monthCalendar1.SelectionRange.Start.ToShortDateString());
         }
 
+        private bool checkCrossingTime(DateTime start, DateTime finish)
+        {
+            dt = new DataTable();
+
+            try
+            {
+                fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                fbCon.Open();
+                command = "SELECT COUNT(*) FROM TODO WHERE @start_task between TODO.date_task_start and TODO.date_task_end or @end_task between TODO.date_task_start and TODO.date_task_end;";
+                toDoCommand = new FbCommand(command, fbCon);
+                toDoCommand.Parameters.AddWithValue("@start_task", start);
+                toDoCommand.Parameters.AddWithValue("@end_task", finish);
+                toDoCommand.CommandType = CommandType.Text;
+                dr = toDoCommand.ExecuteReader();
+                dt.Load(dr);
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.Message);
+                return true;
+            }
+            finally
+            {
+                fbCon.Close();
+            }
+            return true;
+        }
+
         private void materialRaisedButton2_Click(object sender, EventArgs e)
         {
             using (AddEditTask addTask = new AddEditTask())
@@ -327,11 +355,12 @@ namespace C_Sharp_ToDo_DataManagement
                 addTask.Text = "Добавление задачи";
                 //addTask.setStartTime(new DateTime(2023, 12, 27, 11, 45, 45));
                 //addTask.setEndTime(new DateTime(2023, 12, 27, 12, 55, 55));
+                //addTask.setCheckedImportanceTask();
                 addTask.FormClosing += delegate (object fSender, FormClosingEventArgs fe)
                 {
                     if(addTask.DialogResult == DialogResult.OK)
                     {
-
+                        bool crossing = checkCrossingTime(addTask.getStartTime(), addTask.getEndTime());
                     }
                 };
                 addTask.ShowDialog();

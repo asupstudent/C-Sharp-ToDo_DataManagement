@@ -235,6 +235,7 @@
             this.MinimizeBox = false;
             this.Name = "AddEditTask";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "+";
             this.ResumeLayout(false);
             this.PerformLayout();
 
