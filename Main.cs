@@ -335,6 +335,11 @@ namespace C_Sharp_ToDo_DataManagement
                 toDoCommand.CommandType = CommandType.Text;
                 dr = toDoCommand.ExecuteReader();
                 dt.Load(dr);
+                int result = Convert.ToInt32(dt.Rows[0][0]);
+                if (result == 0)
+                {
+                    return false;
+                }
             }
             catch (Exception x)
             {
@@ -353,14 +358,14 @@ namespace C_Sharp_ToDo_DataManagement
             using (AddEditTask addTask = new AddEditTask())
             {
                 addTask.Text = "Добавление задачи";
-                //addTask.setStartTime(new DateTime(2023, 12, 27, 11, 45, 45));
-                //addTask.setEndTime(new DateTime(2023, 12, 27, 12, 55, 55));
-                //addTask.setCheckedImportanceTask();
                 addTask.FormClosing += delegate (object fSender, FormClosingEventArgs fe)
                 {
                     if(addTask.DialogResult == DialogResult.OK)
                     {
                         bool crossing = checkCrossingTime(addTask.getStartTime(), addTask.getEndTime());
+                        //addTask.setStartTime(new DateTime(2023, 12, 27, 11, 45, 45));
+                        //addTask.setEndTime(new DateTime(2023, 12, 27, 12, 55, 55));
+                        //addTask.setCheckedImportanceTask();
                     }
                 };
                 addTask.ShowDialog();
