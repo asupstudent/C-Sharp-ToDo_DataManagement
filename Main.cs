@@ -362,17 +362,24 @@ namespace C_Sharp_ToDo_DataManagement
                 {
                     if(addTask.DialogResult == DialogResult.OK)
                     {
+                        //true если пересекается, false если не пересекается
                         bool crossing = checkCrossingTime(addTask.getStartTime(), addTask.getEndTime());
-                        bool importance = addTask.isCheckedImportanceTask();
-                        if (addTask.getName().Length == 0 || addTask.getCategory() == 0)
-                        {
-                            MessageBox.Show("Заполнены не все обязательные поля");
-                            fe.Cancel = true;
-                        }
-                        else if (!crossing)
+                        string importance = addTask.isCheckedImportanceTask() ? "Обязательно" : "Можно отложить";
+                        addTask.setNameColor();
+                        addTask.setCategoryColor();
+                        if (crossing)
                         {
                             MessageBox.Show("Пересекается время задачи с другой, укажите другое время");
                             fe.Cancel = true;
+
+                        }
+                        else if (addTask.getName().Length == 0 || addTask.getCategory() == 0)
+                        {
+                            fe.Cancel = true;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Все в порядке");
                         }
                         //addTask.setStartTime(new DateTime(2023, 12, 27, 11, 45, 45));
                         //addTask.setEndTime(new DateTime(2023, 12, 27, 12, 55, 55));

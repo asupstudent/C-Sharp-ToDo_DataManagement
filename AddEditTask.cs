@@ -20,8 +20,8 @@ namespace C_Sharp_ToDo_DataManagement
         {
             InitializeComponent();
             dateTimePicker1.MinDate = DateTime.Now;
-            dateTimePicker2.MinDate = DateTime.Now;
-            dateTimePicker3.MinDate = dateTimePicker3.Value.AddMinutes(10);
+            //dateTimePicker2.MinDate = DateTime.Now;
+            //dateTimePicker3.MinDate = dateTimePicker3.Value.AddMinutes(10);
         }
 
         public void setId(int id)
@@ -112,6 +112,46 @@ namespace C_Sharp_ToDo_DataManagement
         {
             if (!Char.IsLetter(e.KeyChar) && e.KeyChar != (char)Keys.Back)
                 e.Handled = true;
+        }
+
+        public void setNameColor()
+        {
+            if (this.getName().Length == 0)
+            {
+                materialSingleLineTextField1.BackColor = System.Drawing.Color.Salmon;
+            }
+            else
+            {
+                materialSingleLineTextField1.BackColor = System.Drawing.Color.PaleGreen;
+            }
+        }
+
+        public void setCategoryColor()
+        {
+            if (this.getCategory() == 0)
+            {
+                materialLabel3.BackColor = System.Drawing.Color.Salmon;
+            }
+            else
+            {
+                materialLabel3.BackColor = System.Drawing.Color.PaleGreen;
+            }
+        }
+
+        private void materialRaisedButton1_Click(object sender, EventArgs e)
+        {
+            using (CategoryList categoryList = new CategoryList())
+            {
+                categoryList.FormClosing += delegate (object fSender, FormClosingEventArgs fe)
+                {
+                    if (categoryList.DialogResult == DialogResult.OK)
+                    {
+                        materialLabel3.Text = categoryList.getCurrentRecord().Cells[1].Value.ToString();
+                        id_category = Convert.ToInt32(categoryList.getCurrentRecord().Cells[0].Value);
+                    }
+                };
+                categoryList.ShowDialog(this);
+            }
         }
     }
 }
