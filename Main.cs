@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Configuration;
 using FirebirdSql.Data.FirebirdClient;
+using System.Runtime.ConstrainedExecution;
 
 namespace C_Sharp_ToDo_DataManagement
 {
@@ -132,14 +133,15 @@ namespace C_Sharp_ToDo_DataManagement
             }
         }
 
-        private int getExpiredId()
+        private int getLoginId(string login)
         {
             try
             {
                 fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
                 fbCon.Open();
-                command = "SELECT STATUS.ID FROM STATUS WHERE STATUS.NAME_STATUS = 'Просрочено';";
+                command = "SELECT USER_TODO.ID FROM USER_TODO WHERE USER_TODO.LOGIN = @login;";
                 toDoCommand = new FbCommand(command, fbCon);
+                toDoCommand.Parameters.AddWithValue("@login", login);
                 toDoCommand.CommandType = CommandType.Text;
                 dr = toDoCommand.ExecuteReader();
                 dt = new DataTable();
@@ -158,10 +160,63 @@ namespace C_Sharp_ToDo_DataManagement
 
         }
 
+        private int getStatusId(string status)
+        {
+            try
+            {
+                fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                fbCon.Open();
+                command = "SELECT STATUS.ID FROM STATUS WHERE STATUS.NAME_STATUS = @status;";
+                toDoCommand = new FbCommand(command, fbCon);
+                toDoCommand.Parameters.AddWithValue("@status", status);
+                toDoCommand.CommandType = CommandType.Text;
+                dr = toDoCommand.ExecuteReader();
+                dt = new DataTable();
+                dt.Load(dr);
+                return (int)dt.Rows[0][0];
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.Message);
+                return 0;
+            }
+            finally
+            {
+                fbCon.Close();
+            }
+
+        }
+
+        private int getImportanceId(string nameImportance)
+        {
+            try
+            {
+                fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                fbCon.Open();
+                command = "SELECT IMPORTANCE.ID FROM IMPORTANCE WHERE IMPORTANCE.NAME_IMPORTANCE = @importance;";
+                toDoCommand = new FbCommand(command, fbCon);
+                toDoCommand.Parameters.AddWithValue("@importance", nameImportance);
+                toDoCommand.CommandType = CommandType.Text;
+                dr = toDoCommand.ExecuteReader();
+                dt = new DataTable();
+                dt.Load(dr);
+                return (int)dt.Rows[0][0];
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.Message);
+                return 0;
+            }
+            finally
+            {
+                fbCon.Close();
+            }
+        }
+
         private void updateExpired(int[] ids)
         {
             int[] receivedId = ids;
-            int expiredId = getExpiredId();
+            int expiredId = getStatusId("Просрочено");
             try
             {
                 fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
@@ -362,11 +417,10 @@ namespace C_Sharp_ToDo_DataManagement
                 {
                     if(addTask.DialogResult == DialogResult.OK)
                     {
-                        //true если пересекается, false если не пересекается
-                        bool crossing = checkCrossingTime(addTask.getStartTime(), addTask.getEndTime());
-                        string importance = addTask.isCheckedImportanceTask() ? "Обязательно" : "Можно отложить";
                         addTask.setNameColor();
                         addTask.setCategoryColor();
+                        //true если пересекается, false если не пересекается
+                        bool crossing = checkCrossingTime(addTask.getStartTime(), addTask.getEndTime());
                         if (crossing)
                         {
                             MessageBox.Show("Пересекается время задачи с другой, укажите другое время");
@@ -379,11 +433,42 @@ namespace C_Sharp_ToDo_DataManagement
                         }
                         else
                         {
-                            MessageBox.Show("Все в порядке");
+                            string name = addTask.getName();
+                            DateTime startTask = addTask.getStartTime();
+                            DateTime endTask = addTask.getEndTime();
+                            int status = getStatusId("В работе");
+                            int importance = getImportanceId(addTask.isCheckedImportanceTask() ? "Обязательно" : "Можно отложить");
+                            int category = addTask.getCategory();
+                            int login = getLoginId(ConfigurationManager.AppSettings["Login"]);
+
+                            try
+                            {
+                                fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                                fbCon.Open();
+                                toDoTransaction = fbCon.BeginTransaction();
+                                command = "INSERT INTO TODO (NAME_TASK, DATE_TASK_START, DATE_TASK_END, ID_STATUS, ID_IMPORTANCE, ID_CATEGORY, ID_USER) " +
+                                                    "VALUES (@name_task, @start_date, @end_date, @status, @importance, @category, @user);";
+                                toDoCommand = new FbCommand(command, fbCon, toDoTransaction);
+                                toDoCommand.Parameters.AddWithValue("@name_task", name);
+                                toDoCommand.Parameters.AddWithValue("@start_date", startTask);
+                                toDoCommand.Parameters.AddWithValue("@end_date", endTask);
+                                toDoCommand.Parameters.AddWithValue("@status", status);
+                                toDoCommand.Parameters.AddWithValue("@importance", importance);
+                                toDoCommand.Parameters.AddWithValue("@category", category);
+                                toDoCommand.Parameters.AddWithValue("@user", login);
+                                toDoCommand.CommandType = CommandType.Text;
+                                toDoCommand.ExecuteNonQuery();
+                                toDoTransaction.Commit();
+                            }
+                            catch (Exception x)
+                            {
+                                MessageBox.Show(x.Message);
+                            }
+                            finally
+                            {
+                                fbCon.Close();
+                            }
                         }
-                        //addTask.setStartTime(new DateTime(2023, 12, 27, 11, 45, 45));
-                        //addTask.setEndTime(new DateTime(2023, 12, 27, 12, 55, 55));
-                        //addTask.setCheckedImportanceTask();
                     }
                 };
                 addTask.ShowDialog();
@@ -393,7 +478,9 @@ namespace C_Sharp_ToDo_DataManagement
 
         private void materialRaisedButton5_Click(object sender, EventArgs e)
         {
-
+            //addTask.setStartTime(new DateTime(2023, 12, 27, 11, 45, 45));
+            //addTask.setEndTime(new DateTime(2023, 12, 27, 12, 55, 55));
+            //addTask.setCheckedImportanceTask();
         }
     }
 }

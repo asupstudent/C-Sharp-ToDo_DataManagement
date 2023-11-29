@@ -24,7 +24,7 @@ namespace C_Sharp_ToDo_DataManagement
             {
                 fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
                 fbCon.Open();
-                command = "SELECT ID AS \"Номер\", NAME AS \"Название категории\" FROM CATEGORY;";
+                command = "SELECT ID AS \"Номер\", NAME AS \"Название категории\" FROM CATEGORY WHERE NOT NAME = 'Все';";
                 toDoCommand = new FbCommand(command, fbCon);
                 toDoCommand.CommandType = CommandType.Text;
                 dr = toDoCommand.ExecuteReader();

@@ -20,8 +20,8 @@ namespace C_Sharp_ToDo_DataManagement
         {
             InitializeComponent();
             dateTimePicker1.MinDate = DateTime.Now;
-            //dateTimePicker2.MinDate = DateTime.Now;
-            //dateTimePicker3.MinDate = dateTimePicker3.Value.AddMinutes(10);
+            dateTimePicker2.MinDate = DateTime.Now;
+            dateTimePicker3.MinDate = dateTimePicker2.Value.AddMinutes(10);
         }
 
         public void setId(int id)
@@ -110,8 +110,10 @@ namespace C_Sharp_ToDo_DataManagement
 
         private void materialSingleLineTextField1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!Char.IsLetter(e.KeyChar) && e.KeyChar != (char)Keys.Back)
+            if (!Char.IsLetter(e.KeyChar) && e.KeyChar != (char)Keys.Back && e.KeyChar != ' ')
+            {
                 e.Handled = true;
+            }
         }
 
         public void setNameColor()
@@ -152,6 +154,11 @@ namespace C_Sharp_ToDo_DataManagement
                 };
                 categoryList.ShowDialog(this);
             }
+        }
+
+        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+            dateTimePicker3.MinDate = dateTimePicker2.Value.AddMinutes(10);
         }
     }
 }
