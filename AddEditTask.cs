@@ -47,6 +47,10 @@ namespace C_Sharp_ToDo_DataManagement
         public void setStartTime(DateTime dt)
         {
             dateTimePicker1.Value = dt;
+        }
+
+        public void setStartDate(DateTime dt)
+        {
             dateTimePicker2.Value = dt;
         }
 
@@ -60,9 +64,9 @@ namespace C_Sharp_ToDo_DataManagement
                                 dateTimePicker2.Value.Second);
         }
 
-        public void setEndTime(DateTime dt)
+        public void setEndTime()
         {
-            dateTimePicker3.Value = dt;
+            dateTimePicker3.Value = dateTimePicker2.Value.AddMinutes(10);
         }
 
         public DateTime getEndTime()

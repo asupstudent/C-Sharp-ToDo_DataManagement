@@ -49,7 +49,8 @@ namespace C_Sharp_ToDo_DataManagement
                                      "CAST(TODO.DATE_TASK_START AS TIME) AS \"Начало\", " +
                                      "CAST(TODO.DATE_TASK_END AS TIME) AS \"Конец\", " +
                                      "IMPORTANCE.NAME_IMPORTANCE AS \"Важность\", " +
-                                     "STATUS.NAME_STATUS AS \"Статус\" " +
+                                     "STATUS.NAME_STATUS AS \"Статус\", " +
+                                     "CATEGORY.NAME AS \"Категория\" " +
                               "FROM TODO, IMPORTANCE, STATUS, CATEGORY, USER_TODO " +
                               "WHERE TODO.ID_STATUS = STATUS.ID AND " +
                                     "TODO.ID_IMPORTANCE = IMPORTANCE.ID AND " +
@@ -69,10 +70,12 @@ namespace C_Sharp_ToDo_DataManagement
                                      "CAST(TODO.DATE_TASK_START AS TIME) AS \"Начало\", " +
                                      "CAST(TODO.DATE_TASK_END AS TIME) AS \"Конец\", " +
                                      "IMPORTANCE.NAME_IMPORTANCE AS \"Важность\", " +
-                                     "STATUS.NAME_STATUS AS \"Статус\" " +
-                              "FROM TODO, IMPORTANCE, STATUS, USER_TODO " +
+                                     "STATUS.NAME_STATUS AS \"Статус\", " +
+                                     "CATEGORY.NAME AS \"Категория\" " +
+                              "FROM TODO, IMPORTANCE, STATUS, CATEGORY, USER_TODO " +
                               "WHERE TODO.ID_STATUS = STATUS.ID AND " +
                                     "TODO.ID_IMPORTANCE = IMPORTANCE.ID AND " +
+                                    "TODO.ID_CATEGORY = CATEGORY.ID AND " +
                                     "TODO.ID_USER = USER_TODO.ID AND " +
                                     "USER_TODO.LOGIN = '" + ConfigurationManager.AppSettings["Login"].ToUpper() + "' AND " +
                                     "CAST(TODO.DATE_TASK_START AS DATE) = @date_list;";
@@ -94,7 +97,7 @@ namespace C_Sharp_ToDo_DataManagement
             }
             dataGridView1.DataSource = dt;
             dataGridView1.Columns[0].Width = 60;
-            dataGridView1.Columns[1].Width = 318;
+            dataGridView1.Columns[1].Width = 218;
             dataGridView1.Columns[2].Width = 100;
             dataGridView1.Columns[3].Width = 100;
             dataGridView1.Columns[4].Width = 100;
@@ -196,6 +199,32 @@ namespace C_Sharp_ToDo_DataManagement
                 command = "SELECT IMPORTANCE.ID FROM IMPORTANCE WHERE IMPORTANCE.NAME_IMPORTANCE = @importance;";
                 toDoCommand = new FbCommand(command, fbCon);
                 toDoCommand.Parameters.AddWithValue("@importance", nameImportance);
+                toDoCommand.CommandType = CommandType.Text;
+                dr = toDoCommand.ExecuteReader();
+                dt = new DataTable();
+                dt.Load(dr);
+                return (int)dt.Rows[0][0];
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.Message);
+                return 0;
+            }
+            finally
+            {
+                fbCon.Close();
+            }
+        }
+
+        private int getCategoryId(string nameCategory)
+        {
+            try
+            {
+                fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                fbCon.Open();
+                command = "SELECT CATEGORY.ID FROM CATEGORY WHERE CATEGORY.NAME = @category;";
+                toDoCommand = new FbCommand(command, fbCon);
+                toDoCommand.Parameters.AddWithValue("@category", nameCategory);
                 toDoCommand.CommandType = CommandType.Text;
                 dr = toDoCommand.ExecuteReader();
                 dt = new DataTable();
@@ -478,9 +507,30 @@ namespace C_Sharp_ToDo_DataManagement
 
         private void materialRaisedButton5_Click(object sender, EventArgs e)
         {
-            //addTask.setStartTime(new DateTime(2023, 12, 27, 11, 45, 45));
-            //addTask.setEndTime(new DateTime(2023, 12, 27, 12, 55, 55));
-            //addTask.setCheckedImportanceTask();
+            using (AddEditTask editTask = new AddEditTask())
+            {
+                editTask.Text = "Изменение задачи";
+                editTask.setId(Convert.ToInt32(dataGridView1[0, dataGridView1.CurrentRow.Index].Value));
+                editTask.setName(Convert.ToString(dataGridView1[1, dataGridView1.CurrentRow.Index].Value));
+                editTask.setStartDate(DateTime.Now);
+                editTask.setStartTime(DateTime.Now);
+                editTask.setEndTime();
+                if (Convert.ToString(dataGridView1[4, dataGridView1.CurrentRow.Index].Value) == "Обязательно")
+                {
+                    editTask.setCheckedImportanceTask();
+                }
+                string category = Convert.ToString(dataGridView1[6, dataGridView1.CurrentRow.Index].Value);
+                editTask.setCategory(getCategoryId(category), category);
+                editTask.FormClosing += delegate (object fSender, FormClosingEventArgs fe)
+                {
+                    if (editTask.DialogResult == DialogResult.OK)
+                    {
+
+                    }
+                };
+                editTask.ShowDialog();
+            }
+            refreshTable(monthCalendar1.SelectionRange.Start.ToShortDateString());
         }
     }
 }
