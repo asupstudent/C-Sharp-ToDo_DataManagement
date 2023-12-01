@@ -112,7 +112,10 @@ namespace C_Sharp_ToDo_DataManagement
             {
                 fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
                 fbCon.Open();
-                command = "SELECT TODO.ID FROM TODO, STATUS WHERE TODO.ID_STATUS = STATUS.ID AND STATUS.NAME_STATUS = 'В работе' AND DATE_TASK_END between '01.01.1970 00:00:00' AND  '" + DateTime.Now + "';";
+                command = "SELECT TODO.ID FROM TODO, STATUS, IMPORTANCE " +
+                                "WHERE TODO.ID_STATUS = STATUS.ID AND STATUS.NAME_STATUS = 'В работе' " +
+                                "AND TODO.ID_IMPORTANCE = IMPORTANCE.ID AND IMPORTANCE.NAME_IMPORTANCE = 'Обязательно' " +
+                                "AND DATE_TASK_END between '01.01.1970 00:00:00' AND  '" + DateTime.Now + "';";
                 toDoCommand = new FbCommand(command, fbCon);
                 toDoCommand.CommandType = CommandType.Text;
                 dr = toDoCommand.ExecuteReader();
