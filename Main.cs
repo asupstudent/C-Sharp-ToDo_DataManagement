@@ -467,7 +467,7 @@ namespace C_Sharp_ToDo_DataManagement
                             DateTime endTask = addTask.getEndTime();
                             int status = getStatusId("В работе");
                             int importance = getImportanceId(addTask.isCheckedImportanceTask() ? "Обязательно" : "Можно отложить");
-                            int category = addTask.getCategory();
+                            int categoryAdd = addTask.getCategory();
                             int login = getLoginId(ConfigurationManager.AppSettings["Login"]);
 
                             try
@@ -483,7 +483,7 @@ namespace C_Sharp_ToDo_DataManagement
                                 toDoCommand.Parameters.AddWithValue("@end_date", endTask);
                                 toDoCommand.Parameters.AddWithValue("@status", status);
                                 toDoCommand.Parameters.AddWithValue("@importance", importance);
-                                toDoCommand.Parameters.AddWithValue("@category", category);
+                                toDoCommand.Parameters.AddWithValue("@category", categoryAdd);
                                 toDoCommand.Parameters.AddWithValue("@user", login);
                                 toDoCommand.CommandType = CommandType.Text;
                                 toDoCommand.ExecuteNonQuery();
@@ -525,7 +525,66 @@ namespace C_Sharp_ToDo_DataManagement
                 {
                     if (editTask.DialogResult == DialogResult.OK)
                     {
+                        editTask.setNameColor();
+                        editTask.setCategoryColor();
+                        //true если пересекается, false если не пересекается
+                        bool crossing = checkCrossingTime(editTask.getStartTime(), editTask.getEndTime());
+                        if (crossing)
+                        {
+                            MessageBox.Show("Пересекается время задачи с другой, укажите другое время");
+                            fe.Cancel = true;
 
+                        }
+                        else if (editTask.getName().Length == 0 || editTask.getCategory() == 0)
+                        {
+                            fe.Cancel = true;
+                        }
+                        else
+                        {
+                            string name = editTask.getName();
+                            DateTime startTask = editTask.getStartTime();
+                            DateTime endTask = editTask.getEndTime();
+                            int status = getStatusId("В работе");
+                            int importance = getImportanceId(editTask.isCheckedImportanceTask() ? "Обязательно" : "Можно отложить");
+                            int categoryEdit = editTask.getCategory();
+                            int login = getLoginId(ConfigurationManager.AppSettings["Login"]);
+                            int current_id = editTask.getId();
+
+                            try
+                            {
+                                fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                                fbCon.Open();
+                                toDoTransaction = fbCon.BeginTransaction();
+                                command = "UPDATE TODO SET TODO.NAME_TASK = @name_task, " +
+                                                          "DATE_TASK_START = @start_date, " +
+                                                          "DATE_TASK_END = @end_date, " +
+                                                          "ID_STATUS = @status, " +
+                                                          "ID_IMPORTANCE = @importance, " +
+                                                          "ID_CATEGORY = @category, " +
+                                                          "ID_USER = @user " +
+                                                          "WHERE TODO.ID = @current_id;";
+                                toDoCommand = new FbCommand(command, fbCon, toDoTransaction);
+                                toDoCommand.Parameters.AddWithValue("@name_task", name);
+                                toDoCommand.Parameters.AddWithValue("@start_date", startTask);
+                                toDoCommand.Parameters.AddWithValue("@end_date", endTask);
+                                toDoCommand.Parameters.AddWithValue("@status", status);
+                                toDoCommand.Parameters.AddWithValue("@importance", importance);
+                                toDoCommand.Parameters.AddWithValue("@category", categoryEdit);
+                                toDoCommand.Parameters.AddWithValue("@user", login);
+                                toDoCommand.Parameters.AddWithValue("@current_id", current_id);
+                                toDoCommand.CommandType = CommandType.Text;
+                                toDoCommand.ExecuteNonQuery();
+                                toDoTransaction.Commit();
+                            }
+                            catch (Exception x)
+                            {
+                                MessageBox.Show(x.Message);
+                            }
+                            finally
+                            {
+                                fbCon.Close();
+                            }
+                        }
                     }
                 };
                 editTask.ShowDialog();
