@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Configuration;
 using FirebirdSql.Data.FirebirdClient;
 using System.Runtime.ConstrainedExecution;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace C_Sharp_ToDo_DataManagement
 {
@@ -593,6 +594,61 @@ namespace C_Sharp_ToDo_DataManagement
                 editTask.ShowDialog();
             }
             refreshTable(monthCalendar1.SelectionRange.Start.ToShortDateString());
+        }
+
+        private void materialSingleLineTextField1_TextChanged(object sender, EventArgs e)
+        {
+            comboBox1.SelectedIndex = 0;
+            try
+            {
+                fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                fbCon.Open();
+                command = "SELECT TODO.ID AS \"Номер\", " +
+                                 "TODO.NAME_TASK AS \"Название задачи\", " +
+                                 "CAST(TODO.DATE_TASK_START AS TIME) AS \"Начало\", " +
+                                 "CAST(TODO.DATE_TASK_END AS TIME) AS \"Конец\", " +
+                                 "IMPORTANCE.NAME_IMPORTANCE AS \"Важность\", " +
+                                 "STATUS.NAME_STATUS AS \"Статус\", " +
+                                 "CATEGORY.NAME AS \"Категория\" " +
+                          "FROM TODO, IMPORTANCE, STATUS, CATEGORY, USER_TODO " +
+                          "WHERE TODO.ID_STATUS = STATUS.ID AND " +
+                                "TODO.ID_IMPORTANCE = IMPORTANCE.ID AND " +
+                                "TODO.ID_CATEGORY = CATEGORY.ID AND " +
+                                "TODO.ID_USER = USER_TODO.ID AND " +
+                                "USER_TODO.LOGIN = '" + ConfigurationManager.AppSettings["Login"].ToUpper() + "' AND " +
+                                "CAST(TODO.DATE_TASK_START AS DATE) = @date_list AND " +
+                                "TODO.NAME_TASK LIKE @name;";
+                toDoCommand = new FbCommand(command, fbCon);
+                toDoCommand.Parameters.AddWithValue("@date_list", monthCalendar1.SelectionRange.Start.ToShortDateString());
+                toDoCommand.Parameters.AddWithValue("@name", "%" + materialSingleLineTextField1.Text + "%");
+                toDoCommand.CommandType = CommandType.Text;
+                dr = toDoCommand.ExecuteReader();
+                dt = new DataTable();
+                dt.Load(dr);
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.Message);
+            }
+            finally
+            {
+                fbCon.Close();
+            }
+            dataGridView1.DataSource = dt;
+            dataGridView1.Columns[0].Width = 60;
+            dataGridView1.Columns[1].Width = 218;
+            dataGridView1.Columns[2].Width = 100;
+            dataGridView1.Columns[3].Width = 100;
+            dataGridView1.Columns[4].Width = 100;
+            dataGridView1.Columns[5].Width = 100;
+        }
+
+        private void materialSingleLineTextField1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!Char.IsLetter(e.KeyChar) && e.KeyChar != (char)Keys.Back && e.KeyChar != ' ')
+            {
+                e.Handled = true;
+            }
         }
     }
 }

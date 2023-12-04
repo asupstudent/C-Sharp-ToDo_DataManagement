@@ -43,7 +43,6 @@
             this.materialRaisedButton7 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialRaisedButton8 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.materialRaisedButton9 = new MaterialSkin.Controls.MaterialRaisedButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -85,10 +84,12 @@
             this.materialSingleLineTextField1.SelectedText = "";
             this.materialSingleLineTextField1.SelectionLength = 0;
             this.materialSingleLineTextField1.SelectionStart = 0;
-            this.materialSingleLineTextField1.Size = new System.Drawing.Size(281, 23);
+            this.materialSingleLineTextField1.Size = new System.Drawing.Size(302, 23);
             this.materialSingleLineTextField1.TabIndex = 2;
             this.materialSingleLineTextField1.TabStop = false;
             this.materialSingleLineTextField1.UseSystemPasswordChar = false;
+            this.materialSingleLineTextField1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.materialSingleLineTextField1_KeyPress);
+            this.materialSingleLineTextField1.TextChanged += new System.EventHandler(this.materialSingleLineTextField1_TextChanged);
             // 
             // materialRaisedButton1
             // 
@@ -262,27 +263,11 @@
             this.comboBox1.TabIndex = 15;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // materialRaisedButton9
-            // 
-            this.materialRaisedButton9.AutoSize = true;
-            this.materialRaisedButton9.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.materialRaisedButton9.Depth = 0;
-            this.materialRaisedButton9.Icon = null;
-            this.materialRaisedButton9.Location = new System.Drawing.Point(769, 71);
-            this.materialRaisedButton9.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialRaisedButton9.Name = "materialRaisedButton9";
-            this.materialRaisedButton9.Primary = true;
-            this.materialRaisedButton9.Size = new System.Drawing.Size(68, 36);
-            this.materialRaisedButton9.TabIndex = 16;
-            this.materialRaisedButton9.Text = "НАЙТИ";
-            this.materialRaisedButton9.UseVisualStyleBackColor = true;
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1024, 600);
-            this.Controls.Add(this.materialRaisedButton9);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.materialRaisedButton8);
             this.Controls.Add(this.materialRaisedButton7);
@@ -328,6 +313,5 @@
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton7;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton8;
         private System.Windows.Forms.ComboBox comboBox1;
-        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton9;
     }
 }
