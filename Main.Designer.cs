@@ -195,6 +195,7 @@
             this.materialRaisedButton6.TabIndex = 9;
             this.materialRaisedButton6.Text = "ОТЧЕТ ПО НЕВЫПОЛНЕННЫМ ЗАДАЧАМ";
             this.materialRaisedButton6.UseVisualStyleBackColor = true;
+            this.materialRaisedButton6.Click += new System.EventHandler(this.materialRaisedButton6_Click);
             // 
             // materialLabel2
             // 
@@ -236,6 +237,7 @@
             this.materialRaisedButton7.TabIndex = 13;
             this.materialRaisedButton7.Text = "ОТЧЕТ ПО ОТЛОЖЕННЫМ ЗАДАЧАМ";
             this.materialRaisedButton7.UseVisualStyleBackColor = true;
+            this.materialRaisedButton7.Click += new System.EventHandler(this.materialRaisedButton7_Click);
             // 
             // materialRaisedButton8
             // 

@@ -8,6 +8,8 @@ using System.Configuration;
 using FirebirdSql.Data.FirebirdClient;
 using System.Runtime.ConstrainedExecution;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.IO;
+using System.Drawing.Text;
 
 namespace C_Sharp_ToDo_DataManagement
 {
@@ -20,9 +22,16 @@ namespace C_Sharp_ToDo_DataManagement
         FbDataReader dr;
         string command;
         DataTable dt;
+        string reportPath;
         public Main()
         {
             InitializeComponent();
+            reportPath = Directory.GetCurrentDirectory() + "\\reports";
+            bool exists = System.IO.Directory.Exists(reportPath);
+            if (!exists)
+            {
+                System.IO.Directory.CreateDirectory(reportPath);
+            }
             materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
@@ -649,6 +658,95 @@ namespace C_Sharp_ToDo_DataManagement
             {
                 e.Handled = true;
             }
+        }
+
+        public bool WriteDataTableToExcel(System.Data.DataTable dataTable, string worksheetName, string saveAsLocation, string ReporType)
+        {
+            Microsoft.Office.Interop.Excel.Application excel;
+            Microsoft.Office.Interop.Excel.Workbook excelworkBook;
+            Microsoft.Office.Interop.Excel.Worksheet excelSheet;
+            Microsoft.Office.Interop.Excel.Range excelCellrange;
+
+            try
+            {
+                //  get Application object.
+                excel = new Microsoft.Office.Interop.Excel.Application();
+                excel.Visible = false;
+                excel.DisplayAlerts = false;
+
+                // Creation a new Workbook
+                excelworkBook = excel.Workbooks.Add(Type.Missing);
+
+                // Workk sheet
+                excelSheet = (Microsoft.Office.Interop.Excel.Worksheet)excelworkBook.ActiveSheet;
+                excelSheet.Name = worksheetName;
+
+                // loop through each row and add values to our sheet
+                int rowcount = 1;
+
+                foreach (DataRow datarow in dataTable.Rows)
+                {
+                    rowcount += 1;
+                    for (int i = 1; i <= dataTable.Columns.Count; i++)
+                    {
+                        // on the first iteration we add the column headers
+                        if (rowcount == 3)
+                        {
+                            excelSheet.Cells[2, i] = dataTable.Columns[i - 1].ColumnName;
+                        }
+                        // Filling the excel file 
+                        excelSheet.Cells[rowcount, i] = datarow[i - 1].ToString();
+                    }
+                }
+
+                //now save the workbook and exit Excel
+                excelworkBook.SaveAs(saveAsLocation); ;
+                excelworkBook.Close();
+                excel.Quit();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+            finally
+            {
+                excelSheet = null;
+                excelCellrange = null;
+                excelworkBook = null;
+            }
+        }
+
+        private void materialRaisedButton6_Click(object sender, EventArgs e)
+        {
+            string reportDate = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
+            try
+            {
+                fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                fbCon.Open();
+                command = "SELECT * FROM TODO;";
+                toDoCommand = new FbCommand(command, fbCon);
+                toDoCommand.CommandType = CommandType.Text;
+                dr = toDoCommand.ExecuteReader();
+                dt = new DataTable();
+                dt.Load(dr);
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.Message);
+            }
+            finally
+            {
+                fbCon.Close();
+            }
+            WriteDataTableToExcel(dt, "Отчет по невыполненным задачам", reportPath + "\\ExpiredTasks-" + reportDate, "");
+            MessageBox.Show("Отчет создан");
+        }
+
+        private void materialRaisedButton7_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
