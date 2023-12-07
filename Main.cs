@@ -682,7 +682,7 @@ namespace C_Sharp_ToDo_DataManagement
                 excelSheet.Name = worksheetName;
 
                 // loop through each row and add values to our sheet
-                int rowcount = 1;
+                int rowcount = 0;
 
                 foreach (DataRow datarow in dataTable.Rows)
                 {
@@ -692,13 +692,13 @@ namespace C_Sharp_ToDo_DataManagement
                         // on the first iteration we add the column headers
                         if (rowcount == 3)
                         {
-                            excelSheet.Cells[2, i] = dataTable.Columns[i - 1].ColumnName;
+                            excelSheet.Cells[1, i] = dataTable.Columns[i - 1].ColumnName;
                         }
                         // Filling the excel file 
                         excelSheet.Cells[rowcount, i] = datarow[i - 1].ToString();
                     }
                 }
-
+                excelSheet.Columns.EntireColumn.AutoFit();
                 //now save the workbook and exit Excel
                 excelworkBook.SaveAs(saveAsLocation); ;
                 excelworkBook.Close();
@@ -721,12 +721,27 @@ namespace C_Sharp_ToDo_DataManagement
         private void materialRaisedButton6_Click(object sender, EventArgs e)
         {
             string reportDate = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
+            int expiredId = getStatusId("Просрочено");
             try
             {
                 fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
                 fbCon.Open();
-                command = "SELECT * FROM TODO;";
+                command = "SELECT TODO.ID AS \"Номер\", " +
+                                 "TODO.NAME_TASK AS \"Название задачи\", " +
+                                 "CAST(TODO.DATE_TASK_START AS TIMESTAMP) AS \"Начало задачи\", " +
+                                 "CAST(TODO.DATE_TASK_START AS TIMESTAMP) AS \"Конец задачи\", " +
+                                 "IMPORTANCE.NAME_IMPORTANCE AS \"Важность\", " +
+                                 "STATUS.NAME_STATUS AS \"Статус\", " +
+                                 "CATEGORY.NAME AS \"Категория\" " +
+                           "FROM TODO, IMPORTANCE, STATUS, CATEGORY, USER_TODO " +
+                           "WHERE TODO.ID_STATUS = STATUS.ID AND " +
+                                 "TODO.ID_IMPORTANCE = IMPORTANCE.ID AND " +
+                                 "TODO.ID_CATEGORY = CATEGORY.ID AND " +
+                                 "TODO.ID_USER = USER_TODO.ID AND " +
+                                 "USER_TODO.LOGIN = '" + ConfigurationManager.AppSettings["Login"].ToUpper() + "' AND " +
+                                 "TODO.ID_STATUS = @status;";
                 toDoCommand = new FbCommand(command, fbCon);
+                toDoCommand.Parameters.AddWithValue("@status", expiredId);
                 toDoCommand.CommandType = CommandType.Text;
                 dr = toDoCommand.ExecuteReader();
                 dt = new DataTable();
