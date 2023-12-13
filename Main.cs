@@ -125,7 +125,7 @@ namespace C_Sharp_ToDo_DataManagement
                 command = "SELECT TODO.ID FROM TODO, STATUS, IMPORTANCE " +
                                 "WHERE TODO.ID_STATUS = STATUS.ID AND STATUS.NAME_STATUS = 'В работе' " +
                                 "AND TODO.ID_IMPORTANCE = IMPORTANCE.ID AND IMPORTANCE.NAME_IMPORTANCE = 'Обязательно' " +
-                                "AND DATE_TASK_END between '01.01.1970 00:00:00' AND  '" + DateTime.Now + "';";
+                                "AND DATE_TASK_END between '01.01.1970 00:00:00' AND '" + DateTime.Now + "';";
                 toDoCommand = new FbCommand(command, fbCon);
                 toDoCommand.CommandType = CommandType.Text;
                 dr = toDoCommand.ExecuteReader();
@@ -665,7 +665,6 @@ namespace C_Sharp_ToDo_DataManagement
             Microsoft.Office.Interop.Excel.Application excel;
             Microsoft.Office.Interop.Excel.Workbook excelworkBook;
             Microsoft.Office.Interop.Excel.Worksheet excelSheet;
-            Microsoft.Office.Interop.Excel.Range excelCellrange;
 
             try
             {
@@ -713,7 +712,6 @@ namespace C_Sharp_ToDo_DataManagement
             finally
             {
                 excelSheet = null;
-                excelCellrange = null;
                 excelworkBook = null;
             }
         }
@@ -761,7 +759,71 @@ namespace C_Sharp_ToDo_DataManagement
 
         private void materialRaisedButton7_Click(object sender, EventArgs e)
         {
+            string reportDate = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
+            int delayId = getImportanceId("Можно отложить");
+            try
+            {
+                fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                fbCon.Open();
+                command = "SELECT TODO.ID AS \"Номер\", " +
+                                 "TODO.NAME_TASK AS \"Название задачи\", " +
+                                 "CAST(TODO.DATE_TASK_START AS TIMESTAMP) AS \"Начало задачи\", " +
+                                 "CAST(TODO.DATE_TASK_START AS TIMESTAMP) AS \"Конец задачи\", " +
+                                 "IMPORTANCE.NAME_IMPORTANCE AS \"Важность\", " +
+                                 "STATUS.NAME_STATUS AS \"Статус\", " +
+                                 "CATEGORY.NAME AS \"Категория\" " +
+                           "FROM TODO, IMPORTANCE, STATUS, CATEGORY, USER_TODO " +
+                           "WHERE TODO.ID_STATUS = STATUS.ID AND " +
+                                 "TODO.ID_IMPORTANCE = IMPORTANCE.ID AND " +
+                                 "TODO.ID_CATEGORY = CATEGORY.ID AND " +
+                                 "TODO.ID_USER = USER_TODO.ID AND " +
+                                 "USER_TODO.LOGIN = '" + ConfigurationManager.AppSettings["Login"].ToUpper() + "' AND " +
+                                 "TODO.ID_IMPORTANCE = @delayId AND " +
+                                 "TODO.DATE_TASK_END between '01.01.1970 00:00:00' AND '" + DateTime.Now + "';";
+                toDoCommand = new FbCommand(command, fbCon);
+                toDoCommand.Parameters.AddWithValue("@delayId", delayId);
+                toDoCommand.CommandType = CommandType.Text;
+                dr = toDoCommand.ExecuteReader();
+                dt = new DataTable();
+                dt.Load(dr);
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.Message);
+            }
+            finally
+            {
+                fbCon.Close();
+            }
+            WriteDataTableToExcel(dt, "Отчет по отложенным задачам", reportPath + "\\DelayedTasks-" + reportDate, "");
+            MessageBox.Show("Отчет создан");
+        }
 
+        private void materialRaisedButton8_Click(object sender, EventArgs e)
+        {
+            int currentId = Convert.ToInt32(dataGridView1[0, dataGridView1.CurrentRow.Index].Value);
+            int successId = getStatusId("Выполнено");
+
+            try
+            {
+                fbCon = new FbConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+                fbCon.Open();
+                command = "UPDATE TODO SET TODO.ID_STATUS = @successId WHERE TODO.ID = @currentId;";
+                toDoCommand = new FbCommand(command, fbCon);
+                toDoCommand.Parameters.AddWithValue("@successId", successId);
+                toDoCommand.Parameters.AddWithValue("@currentId", currentId);
+                toDoCommand.CommandType = CommandType.Text;
+                toDoCommand.ExecuteNonQuery();
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.Message);
+            }
+            finally
+            {
+                fbCon.Close();
+            }
+            refreshTable(monthCalendar1.SelectionRange.Start.ToShortDateString());
         }
     }
 }

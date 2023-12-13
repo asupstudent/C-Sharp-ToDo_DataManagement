@@ -255,6 +255,7 @@
             this.materialRaisedButton8.TabIndex = 14;
             this.materialRaisedButton8.Text = "ЗАВЕРШИТЬ ЗАДАЧУ";
             this.materialRaisedButton8.UseVisualStyleBackColor = true;
+            this.materialRaisedButton8.Click += new System.EventHandler(this.materialRaisedButton8_Click);
             // 
             // comboBox1
             // 
